@@ -33,6 +33,16 @@ touch cmd/api/main.go
 go run ./cmd/api  
 ```
 
+## Chapter 2.2 Basic HTTP Server
+
+```bsh
+go run ./cmd/api  
+```
+
+http://localhost:4000/v1/healthcheck
+
+
+
 
 
 
