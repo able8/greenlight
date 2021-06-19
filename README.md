@@ -29,7 +29,10 @@ go mod init github.com/able8/greenlight
 mkdir -p bin cmd/api internal migrations remote
 touch Makefile
 touch cmd/api/main.go
+
+go run ./cmd/api  
 ```
+
 
 
 
