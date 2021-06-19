@@ -46,6 +46,15 @@ go run ./cmd/api  -port=3000 -env=production
 http://localhost:4000/v1/healthcheck
 
 
+## 2.3. API Endpoints and RESTful Routing
+
+- Choosing a router
+
+```bash
+go get github.com/julienschemidt/httprouter@v1.3.0
+```
+
+
 
 
 
