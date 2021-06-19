@@ -37,6 +37,10 @@ go run ./cmd/api
 
 ```bsh
 go run ./cmd/api  
+
+curl -i localhost:4000/v1/healthcheck
+
+go run ./cmd/api  -port=3000 -env=production
 ```
 
 http://localhost:4000/v1/healthcheck
