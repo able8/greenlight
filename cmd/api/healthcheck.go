@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"net/http"
 )
 
@@ -18,24 +17,30 @@ func (app *application) healthcheckHandler(w http.ResponseWriter, r *http.Reques
 		"version":     version,
 	}
 
-	// Pass the map to the json.Marshal() function.
-	// This returns a []byte slice containing the encoded JSON.
-	// If there was an error, we log it and send the client a generic error message.
-	js, err := json.Marshal(data)
+	err := app.writeJSON(w, http.StatusOK, data, nil)
 	if err != nil {
 		app.logger.Println(err)
 		http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
-		return
 	}
 
+	// Pass the map to the json.Marshal() function.
+	// This returns a []byte slice containing the encoded JSON.
+	// If there was an error, we log it and send the client a generic error message.
+	// js, err := json.Marshal(data)
+	// if err != nil {
+	// 	app.logger.Println(err)
+	// 	http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
+	// 	return
+	// }
+
 	// Append a newline to the JSON. This is just a small nicety to make it easier to view in terminal application.
-	js = append(js, '\n')
+	// js = append(js, '\n')
 
 	// Set the "Content-Type: application/json" header on the response.
 	// If you forget to this, Go will default to sending
 	// a "Content-Type: text/plain; charset=utf-8" header instead.
-	w.Header().Set("Content-Type", "application/json")
+	// w.Header().Set("Content-Type", "application/json")
 
 	// Write the JSON as the HTTP response body.
-	w.Write([]byte(js))
+	// w.Write([]byte(js))
 }
