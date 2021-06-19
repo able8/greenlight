@@ -51,7 +51,15 @@ http://localhost:4000/v1/healthcheck
 - Choosing a router
 
 ```bash
-go get github.com/julienschemidt/httprouter@v1.3.0
+go get github.com/julienschmidt/httprouter@v1.3.0
+```
+
+```bash
+curl -i localhost:4000/v1/healthcheck
+
+curl -X POST localhost:4000/v1/movies
+
+curl localhost:4000/v1/movies/123
 ```
 
 
