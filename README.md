@@ -62,9 +62,9 @@ curl -X POST localhost:4000/v1/movies
 curl localhost:4000/v1/movies/123
 ```
 
+## Chapter 3 Sending JSON Responses
 
-
-
+## Chapter 3.1 Fixed-Format JSON
 
 
 
