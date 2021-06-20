@@ -67,3 +67,6 @@ curl localhost:4000/v1/movies/123
 ## Chapter 3.1 Fixed-Format JSON
 
 ## Chapter 3.2 JSON Encoding
+
+## Chapter 3.3 Encoding Structs
+
