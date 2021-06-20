@@ -105,3 +105,11 @@ curl -i -d '{"title": "Moana"}{"title": "Top Gun"}' localhost:4000/v1/movies
 # Body contains garbage contents after the first JSON value
 curl -i -d '{"title": "Moano"} :~()' localhost:4000/v1/movies
 ```
+
+## Chapter 4.4.Custom JSON Decoding
+
+```bash
+curl -i -d '{"title": "Moana","runtime": "107 mins"}' localhost:4000/v1/movies
+
+curl -i -d '{"title": "Moana","runtime": "107 minutes"}' localhost:4000/v1/movies
+```
