@@ -70,3 +70,4 @@ curl localhost:4000/v1/movies/123
 
 ## Chapter 3.3 Encoding Structs
 
+## Chapter 3.4 Formatting and Enveloping Responses
