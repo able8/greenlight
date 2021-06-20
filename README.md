@@ -87,3 +87,12 @@ BODY='{"title":"Moana","year": 2016, "runtime": 107, "genres": ["animation", "ad
 curl -i -d "$BODY" localhost:4000/v1/movies
 ```
 
+## Chapter 4.2 Managing Bad Requests
+
+```bash
+# Send a numeric 'title' value instead of string
+curl -d '{"title": 123}' localhost:4000/v1/movies
+
+# Send an empty request body
+curl -X POST localhost:4000/v1/movies
+```

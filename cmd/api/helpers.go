@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
+	"io"
 	"net/http"
 	"strconv"
 
@@ -50,6 +52,57 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data envelo
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	w.Write([]byte(js))
+
+	return nil
+}
+
+func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
+	// Decode the request body into the target destination
+	err := json.NewDecoder(r.Body).Decode(dst)
+	if err != nil {
+
+		// If there is an error during decoding, start the triage...
+		var syntaxError *json.SyntaxError
+		var unmarshalTypeError *json.UnmarshalTypeError
+		var invalidUnmarshalError *json.InvalidUnmarshalError
+
+		switch {
+		// Use the errors.As() function to check whether the error has the type.
+		case errors.As(err, &syntaxError):
+			return fmt.Errorf("body contains badly formatted JSON (at character %d)", syntaxError.Offset)
+
+		// In some circumstances Decode() may also return an io.ErrUnexpectedEOF error
+		// for syntax errors in the JSON. So we check for this using errors.Is() and
+		// return a generic error message.
+		case errors.Is(err, io.ErrUnexpectedEOF):
+			return errors.New("body contains badly formatted JSON")
+
+		// Likewise, catch any *json.UnmarshalTypeError errors. These occur when the
+		// JSON value is the wrong type for the target destination. If the error relates
+		// to a specific field, then we include that in our error message to make it
+		// easier for the client to debug.
+		case errors.As(err, &unmarshalTypeError):
+			if unmarshalTypeError.Field != "" {
+				return fmt.Errorf("body contains incorrect JSON type for field %q", unmarshalTypeError.Field)
+			}
+			return fmt.Errorf("body contains incorrect JSON type (at character %d)", unmarshalTypeError.Offset)
+
+		// An io.EOF error will be returned by Decode() if the request body is empty.
+		case errors.Is(err, io.EOF):
+			return errors.New("body must not be empty")
+
+		// A json.InvalidUnmarshalError error will be returned if we pass a non-nil pointer
+		// to Decode(). We catch this and painc, rather then returning an error to our handler.
+
+		case errors.As(err, &invalidUnmarshalError):
+			panic(err)
+
+			// For anything else, return the error message as-is.
+		default:
+			return err
+		}
+
+	}
 
 	return nil
 }
