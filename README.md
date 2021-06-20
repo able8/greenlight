@@ -167,3 +167,36 @@ export GREENLIGHT_DB_DSN="postgres://greenlight:password@localhost:/greenlight?s
 
 ## Chapter 5.3 Configuring the Database Connection Pool
 
+
+## Chapter 6 SQL Migrations
+
+To do this, we could simply use the psql tool again and run the necessary CREATE TABLE statement against our database.
+
+But instead, we’re going to explore howto use SQL migrations to create the table (and more generally, manage databaseschema changes throughout the project).
+
+- Installing the migrate tool
+
+```sh
+brew install golang-migrate
+migrate -veriosn
+```
+
+
+## Chapter 6.2.Working with SQL Migrations
+
+```sh
+migrate create -seq -ext=.sql -dir=./migrations create_movies_table
+
+migrate create -seq -ext=.sql -dir=./migrations add_movies_check_constraints
+
+# Executing the migrations
+migrate -path=./migrations -database=$GREENLIGHT_DB_DSN up
+
+psql  $GREENLIGHT_DB_DSN
+\dt
+
+select * from schema_migrations;
+
+\d movies;
+
+```
