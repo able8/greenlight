@@ -164,3 +164,6 @@ go get github.com/lib/pq@v1.10.0
 
 export GREENLIGHT_DB_DSN="postgres://greenlight:password@localhost:/greenlight?sslmode=disable"
 ```
+
+## Chapter 5.3 Configuring the Database Connection Pool
+
