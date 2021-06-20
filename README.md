@@ -73,3 +73,5 @@ curl localhost:4000/v1/movies/123
 ## Chapter 3.4 Formatting and Enveloping Responses
 
 ## Chapter 3.5 Advanced JSON Customization
+
+## Chapter 3.6 Sending Error Messages
