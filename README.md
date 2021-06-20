@@ -113,3 +113,10 @@ curl -i -d '{"title": "Moana","runtime": "107 mins"}' localhost:4000/v1/movies
 
 curl -i -d '{"title": "Moana","runtime": "107 minutes"}' localhost:4000/v1/movies
 ```
+
+## Chapter 4.5.Validating JSON Input
+
+```bash
+mkdir internal/validator
+touch internal/validator/validator.go
+```
