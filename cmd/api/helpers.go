@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"strconv"
+	"strings"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -57,8 +58,21 @@ func (app *application) writeJSON(w http.ResponseWriter, status int, data envelo
 }
 
 func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst interface{}) error {
+	// Use http.MaxBytesReader() to limit the size of the response body to 1MB.
+	maxBytes := 1_048_576
+	r.Body = http.MaxBytesReader(w, r.Body, int64(maxBytes))
+
 	// Decode the request body into the target destination
-	err := json.NewDecoder(r.Body).Decode(dst)
+	// err := json.NewDecoder(r.Body).Decode(dst)
+
+	// Initialize the json.Decoder, and call the DisallowUnknownFields() method on it
+	// before decoding. This means that if the JSON from the client now includes any field which
+	// cannot be mapped to the target destination, the decoder will return an error instead of just ignoring the field.
+	dec := json.NewDecoder(r.Body)
+	dec.DisallowUnknownFields()
+
+	// Decode the response body into the target destination.
+	err := dec.Decode(dst)
 	if err != nil {
 
 		// If there is an error during decoding, start the triage...
@@ -93,15 +107,29 @@ func (app *application) readJSON(w http.ResponseWriter, r *http.Request, dst int
 
 		// A json.InvalidUnmarshalError error will be returned if we pass a non-nil pointer
 		// to Decode(). We catch this and painc, rather then returning an error to our handler.
-
 		case errors.As(err, &invalidUnmarshalError):
 			panic(err)
+
+		case strings.HasPrefix(err.Error(), "json: unknown field"):
+			fieldName := strings.TrimPrefix(err.Error(), "jso: unknown field ")
+			return fmt.Errorf("body contains unknown key %s", fieldName)
+
+		case err.Error() == "http: request body too large":
+			return fmt.Errorf("body must not be larger than %d bytes", maxBytes)
 
 			// For anything else, return the error message as-is.
 		default:
 			return err
 		}
 
+	}
+
+	// Call Decode() again, using a pointer to an empty anonymous strcut as the
+	// destination. If the request body only contained a single JSON value this will
+	// return an io.EOF error.
+	err = dec.Decode(&struct{}{})
+	if err != io.EOF {
+		return errors.New("body must only contains a single JSON value")
 	}
 
 	return nil

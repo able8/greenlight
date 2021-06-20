@@ -96,3 +96,12 @@ curl -d '{"title": 123}' localhost:4000/v1/movies
 # Send an empty request body
 curl -X POST localhost:4000/v1/movies
 ```
+
+## Chapter 4.3 Restricting Inputs
+
+```bash
+# Body contains multiple JSON values
+curl -i -d '{"title": "Moana"}{"title": "Top Gun"}' localhost:4000/v1/movies
+# Body contains garbage contents after the first JSON value
+curl -i -d '{"title": "Moano"} :~()' localhost:4000/v1/movies
+```
