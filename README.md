@@ -75,3 +75,15 @@ curl localhost:4000/v1/movies/123
 ## Chapter 3.5 Advanced JSON Customization
 
 ## Chapter 3.6 Sending Error Messages
+
+## Chapter 4 Parsing JSON Requests
+
+## Chapter 4.1 JSON Decoding
+
+```bash
+# Create a BODY variable containing the JSON data that we want to send.
+BODY='{"title":"Moana","year": 2016, "runtime": 107, "genres": ["animation", "adventure"]}'
+# Use the -d flag to send the contents of the BODY variable as the HTTP request body.
+curl -i -d "$BODY" localhost:4000/v1/movies
+```
+
