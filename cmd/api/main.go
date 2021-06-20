@@ -1,12 +1,17 @@
 package main
 
 import (
+	"context"
+	"database/sql"
 	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	// Import the pq driver so that it can register itself with the database/sql package.
+	_ "github.com/lib/pq"
 )
 
 // Declare a string containing the application version number.
@@ -17,6 +22,9 @@ const version = "1.0.0"
 type config struct {
 	port int
 	env  string
+	db   struct {
+		dsn string
+	}
 }
 
 // Declare an application struct to hold the dependencies for out HTTP handlers, helpers, and middleware.
@@ -32,11 +40,31 @@ func main() {
 	// Read the value of the port and env command-line flags into the config struct.
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
+
+	// Read the DSN value from the db-dsn command-line flags into the config struct.
+	// We default to using our development DSN if no flag is provided.
+	flag.StringVar(&cfg.db.dsn, "db-dsn", "postgres://greenlight:password@localhost:/greenlight?sslmode=disable", "PostgresSQL DSN")
+
+	// flag.StringVar(&cfg.db.dsn, "db-dsn", os.Getenv("GREENLIGHT_DB_DSN"), "POSTGRESSQL DSN")
+
 	flag.Parse()
 
 	// Initialize a new logger which writes messages to the standard out stream,
 	// prefixed with the current date and time.
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+
+	// Call the openDB() helper function to create the connection pool,
+	// passing in the config struct. If this returns an error,
+	// we log it and exit the application immediately.
+	db, err := openDB(cfg)
+	if err != nil {
+		logger.Fatal(err)
+	}
+	// Defer a call to db.Close() so that the connection pool is closed be fore the main() exits.
+	defer db.Close()
+
+	// Also log a message to say that the connection pool has been successfully established.
+	logger.Printf("database connection pool established")
 
 	// Declare an instance of the application struct,
 	// containing the config struct and the logger.
@@ -61,6 +89,33 @@ func main() {
 
 	// Start the HTTP server.
 	logger.Printf("Starting %s server on %s", cfg.env, srv.Addr)
-	err := srv.ListenAndServe()
+
+	// Because the err variable is now already declared in the code above,
+	// we need to use the = operator here, instead of the := operator.
+	err = srv.ListenAndServe()
 	logger.Fatal(err)
+}
+
+// The openDB() function returns a sql.DB connection pool.
+func openDB(cfg config) (*sql.DB, error) {
+	// User sql.Open() to create an empty connection pool, using the DSN from the config struct.
+	db, err := sql.Open("postgres", cfg.db.dsn)
+	if err != nil {
+		return nil, err
+	}
+
+	// Create a connect with a 5-second timeout deadline.
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	// Establish a new connection to the database, passing in the context we
+	// createed above as a parameter. If the connection couldn't be
+	// established successfully within the 5 seconds deadline, then this will returns an error.
+	err = db.PingContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	// Return the sql.DB connection pool.
+	return db, nil
 }

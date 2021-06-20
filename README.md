@@ -124,3 +124,43 @@ BODY='{"title":"","year":1000,"runtime":"-123 mins","genres":["sci-fi","sci-fi"]
 
 curl -i -d "$BODY" localhost:4000/v1/movies
 ```
+
+## Chapter 5 Database Setup and Configuration
+
+## Chapter 5.1.Setting up PostgreSQL
+
+```bash
+brew install postgresql
+psql --version
+# https://wiki.postgresql.org/wiki/Homebrew
+brew services start postgresql
+psql postgres
+
+SELECT current_user;
+# Creating database, users, and extensions
+CREATE DATABASE greenlight;
+\c greenlight
+
+CREATE ROLE greenlight WITH LOGIN PASSWORD 'passoword';
+CREATE EXTENSION IF NOT EXISTS citext;
+\q
+```
+
+- Connecting as the new user
+
+```bash
+psql --host=localhost --dbname=greenlight --username=greenlight
+
+SELECT current_user;
+\q
+
+psql postgres -c 'SHOW config_file;'
+```
+
+## Chapter 5.2 Connecting to PostgreSQL
+
+```sh
+go get github.com/lib/pq@v1.10.0
+
+export GREENLIGHT_DB_DSN="postgres://greenlight:password@localhost:/greenlight?sslmode=disable"
+```
