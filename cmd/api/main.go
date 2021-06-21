@@ -11,6 +11,9 @@ import (
 	"time"
 
 	// Import the pq driver so that it can register itself with the database/sql package.
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/lib/pq"
 )
 
@@ -72,6 +75,23 @@ func main() {
 
 	// Also log a message to say that the connection pool has been successfully established.
 	logger.Printf("database connection pool established")
+
+	migrationDriver, err := postgres.WithInstance(db, &postgres.Config{})
+	if err != nil {
+		logger.Fatal(err, nil)
+	}
+
+	migrator, err := migrate.NewWithDatabaseInstance("file:migrations/", "postgres", migrationDriver)
+	if err != nil {
+		logger.Fatal(err, nil)
+	}
+
+	err = migrator.Up()
+	if err != nil && err != migrate.ErrNoChange {
+		logger.Fatal(err, nil)
+	}
+
+	logger.Printf("database migrations applied")
 
 	// Declare an instance of the application struct,
 	// containing the config struct and the logger.

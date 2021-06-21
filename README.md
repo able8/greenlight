@@ -192,6 +192,10 @@ migrate create -seq -ext=.sql -dir=./migrations add_movies_check_constraints
 # Executing the migrations
 migrate -path=./migrations -database=$GREENLIGHT_DB_DSN up
 
+# Fixing errors in SQL Migrations
+migrate -path=./migrations -database=$GREENLIGHT_DB_DSN force xx
+
+
 psql  $GREENLIGHT_DB_DSN
 \dt
 
