@@ -1,6 +1,7 @@
 package data
 
 import (
+	"database/sql"
 	"time"
 
 	"github.com/able8/greenlight/internal/validator"
@@ -16,6 +17,31 @@ type Movie struct {
 	Runtime   Runtime   `json:"runtime,omitempty"` // Movie runtime in minutes
 	Genres    []string  `json:"genres,omitempty"`  // Slice of genres for the movie, romance, comedy, etc.
 	Version   int32     `json:"version"`           // The version number will be incremented each time the information is updated.
+}
+
+// Define a MovieModel struct type which wraps a sql.DB connection pool.
+type MovieModel struct {
+	DB *sql.DB
+}
+
+// Insert a new record in the movies table.
+func (m MovieModel) Insert(movie *Movie) error {
+	return nil
+}
+
+// Get a specific record from the movies table.
+func (m MovieModel) Get(id int64) (*Movie, error) {
+	return nil, nil
+}
+
+// Update a specific record in the movies table.
+func (m MovieModel) Update(movie *Movie) error {
+	return nil
+}
+
+// Delete a specific record from the movies table.
+func (m MovieModel) Delete(id int64) error {
+	return nil
 }
 
 func ValidateMovie(v *validator.Validator, movie *Movie) {

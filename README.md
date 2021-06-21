@@ -205,9 +205,6 @@ select * from schema_migrations;
 
 ```
 
-## Chapter 7.CRUD Operations
-
-
 ## 7. CRUD Operations
 
 ### 7.1. Setting up the Movie Model

@@ -11,6 +11,7 @@ import (
 	"time"
 
 	// Import the pq driver so that it can register itself with the database/sql package.
+	"github.com/able8/greenlight/internal/data"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -37,6 +38,7 @@ type config struct {
 type application struct {
 	config config
 	logger *log.Logger
+	models data.Models // Add a models struct to hold our new Models struct.
 }
 
 func main() {
@@ -98,6 +100,9 @@ func main() {
 	app := &application{
 		config: cfg,
 		logger: logger,
+		// User the data.NewModels() function to initialize a Models struct, passing
+		// in the connection pool as a parameter.
+		models: data.NewModels(db),
 	}
 
 	// Declare a new servemux and add a route.
