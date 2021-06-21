@@ -2,6 +2,7 @@ package data
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 
 	"github.com/able8/greenlight/internal/validator"
@@ -47,7 +48,50 @@ func (m MovieModel) Insert(movie *Movie) error {
 
 // Get a specific record from the movies table.
 func (m MovieModel) Get(id int64) (*Movie, error) {
-	return nil, nil
+	// The PostgresSQL bigserial type that we're using for the movie ID starts
+	// auto-incrementing at 1 by default, so we know that no movies will have ID values
+	// less than that. To avoid making an unnecessary database call, we take a shotcut
+	// and return an ErrRecordNotFound error straight away.
+	if id < 1 {
+		return nil, ErrRecordNotFound
+	}
+
+	// Define the SQL query for retrieving the movie data.
+	query := `
+		SELECT id, created_at, title, year, runtime, genres, version
+		FROM movies
+		WHERE id = $1
+	`
+
+	// Declare a Movie struct to hold the data returned by the query.
+	var movie Movie
+
+	// Scan the response data into the fileds of the Movie struct.
+	// Importantly, notice that we need to convert the scan target for the
+	// genres column using the pq.Array() adapter function again.
+	err := m.DB.QueryRow(query, id).Scan(
+		&movie.ID,
+		&movie.CreatedAt,
+		&movie.Title,
+		&movie.Year,
+		&movie.Runtime,
+		pq.Array(&movie.Genres),
+		&movie.Version,
+	)
+
+	// Handle any errors. If there was no matching movie found, Scan() will return
+	// a sql.ErrNoRows error. We chack for this and return our custom ErrRecordNotFound error instead.
+	if err != nil {
+		switch {
+		case errors.Is(err, sql.ErrNoRows):
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	// Otherwise, return a pointer to the Movie struct.
+	return &movie, nil
 }
 
 // Update a specific record in the movies table.
