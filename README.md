@@ -211,6 +211,23 @@ select * from schema_migrations;
 
 ### 7.2. Creating a New Movie
 
+```sh
+BODY='{"title":"Moana","year": 2016, "runtime": "107 mins", "genres": ["animation", "adventure"]}'
+curl -i -d "$BODY" localhost:4000/v1/movies
+
+BODY='{"title":"Black Panther","year": 2018, "runtime": "134 mins", "genres": ["action", "adventure"]}'
+curl -i -d "$BODY" localhost:4000/v1/movies
+
+BODY='{"title":"Deadpool","year": 2016, "runtime": "108 mins", "genres": ["action", "comedy"]}'
+curl -i -d "$BODY" localhost:4000/v1/movies
+
+BODY='{"title":"The Breakfash Club","year": 1986, "runtime": "96 mins", "genres": ["drame"]}'
+curl -i -d "$BODY" localhost:4000/v1/movies
+
+
+SELECT * FROM movies;
+```
+
 ### 7.3. Fetching a Movie
 
 ### 7.4. Updating a Movie
