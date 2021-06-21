@@ -241,6 +241,10 @@ curl -i -X PUT -d "$BODY" localhost:4000/v1/movies/2
 
 ### 7.5. Deleting a Movie
 
+```sh
+curl -X DELETE localhost:4000/v1/movies/5
+```
+
 ## 8. Advanced CRUD Operations
 
 ### 8.1. Handling Partial Updates
