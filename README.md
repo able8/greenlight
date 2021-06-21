@@ -232,6 +232,13 @@ SELECT * FROM movies;
 
 ### 7.4. Updating a Movie
 
+```sh
+curl localhost:4000/v1/movies/2
+
+BODY='{"title":"Black Panther","year": 2018, "runtime": "134 mins", "genres": ["sci-fi","action", "adventure"]}'
+curl -i -X PUT -d "$BODY" localhost:4000/v1/movies/2
+```
+
 ### 7.5. Deleting a Movie
 
 ## 8. Advanced CRUD Operations
