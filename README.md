@@ -256,6 +256,7 @@ So — in theory — we could change the fields in our input struct to be pointe
 curl -X PATCH -d '{"year": 1985}' localhost:4000/v1/movies/4
 curl -X PATCH -d '{"year": 1985, "title":""}' localhost:4000/v1/movies/4
 ```
+
 ### 8.2. Optimistic Concurrency Control
 
 ```sh
@@ -285,6 +286,12 @@ curl -w '\nTime: %{time_total}s \n' localhost:4000/v1/movies/4
 ## 9. Filtering, Sorting, and Pagination
 
 ### 9.1. Parsing Query String Parameters
+
+```sh
+curl "localhost:4000/v1/movies?title=godfather&genres=crime,drame&page=1&page_size=5&sort=year"
+
+curl "localhost:4000/v1/movies"
+```
 
 ### 9.2. Validating Query String Parameters
 
