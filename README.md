@@ -258,6 +258,20 @@ curl -X PATCH -d '{"year": 1985, "title":""}' localhost:4000/v1/movies/4
 ```
 ### 8.2. Optimistic Concurrency Control
 
+```sh
+curl -X PATCH -d '{"year": 1985}' localhost:4000/v1/movies/4 &
+curl -X PATCH -d '{"year": 1986}' localhost:4000/v1/movies/4 &
+
+{           
+        "movie": {
+		...
+        }
+}
+{
+        "error": "unable to update the record due to an edit conflict, please try again"
+}
+```
+
 ### 8.3. Managing SQL Query Timeouts
 
 ## 9. Filtering, Sorting, and Pagination
