@@ -274,6 +274,14 @@ curl -X PATCH -d '{"year": 1986}' localhost:4000/v1/movies/4 &
 
 ### 8.3. Managing SQL Query Timeouts
 
+This feature can be useful when you have a SQL query that is taking longer to runthan expected. When this happens, it suggests a problem — either with thatparticular query or your database or application more generally — and you probablywant to cancel the query (in order to free up resources), log an error for furtherinvestigation, and return a 500 Internal Server Error response to the client.
+
+We’ll update ourSQL query to return a pg_sleep(10) value, which will make PostgreSQL sleep for 10seconds before returning its result.
+
+```sh
+curl -w '\nTime: %{time_total}s \n' localhost:4000/v1/movies/4
+```
+
 ## 9. Filtering, Sorting, and Pagination
 
 ### 9.1. Parsing Query String Parameters
