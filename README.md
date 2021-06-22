@@ -295,7 +295,17 @@ curl "localhost:4000/v1/movies"
 
 ### 9.2. Validating Query String Parameters
 
+```sh
+curl "localhost:4000/v1/movies?title=godfather&genres=crime,drame&page=1&page_size=5&sort=year"
+
+curl "localhost:4000/v1/movies?page=-1&page_size=-1&sort=foo"
+```
+
 ### 9.3. Listing Data
+
+```sh
+curl "localhost:4000/v1/movies"
+```
 
 ### 9.4. Filtering Lists
 
