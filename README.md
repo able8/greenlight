@@ -249,6 +249,13 @@ curl -X DELETE localhost:4000/v1/movies/5
 
 ### 8.1. Handling Partial Updates
 
+The key thing to notice here is that pointers have the zero-value nil.
+So — in theory — we could change the fields in our input struct to be pointers.Then to see if a client has provided a particular key/value pair in the JSON, we cansimply check whether the corresponding field in the input struct equals nil or not.
+
+```sh
+curl -X PATCH -d '{"year": 1985}' localhost:4000/v1/movies/4
+curl -X PATCH -d '{"year": 1985, "title":""}' localhost:4000/v1/movies/4
+```
 ### 8.2. Optimistic Concurrency Control
 
 ### 8.3. Managing SQL Query Timeouts
