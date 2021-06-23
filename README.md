@@ -435,6 +435,12 @@ done
 
 ### 11.3. Configuring the Rate Limiters
 
+```sh
+go run ./cmd/api --limiter-burst=2
+
+go run ./cmd/api --limiter-enable=false
+```
+
 ## 12. Graceful Shutdown
 
 ### 12.1. Sending Shutdown Signals
