@@ -309,6 +309,25 @@ curl "localhost:4000/v1/movies"
 
 ### 9.4. Filtering Lists
 
+// List all movies
+/v1/movies
+
+// List movies where the title is case-insensitive exact match
+/v1/movies?title=balck+panther
+
+// List movies where the genres includes 'adventure'
+/v1/movies?genres=adventure
+
+// List movies where the title is a case-insensitive exact match for 'moana' AND the genres includes both animation and adventure
+/v1/movies?title=moana&genres=animation,adventure
+
+curl "http://localhost:4000/v1/movies?genres=adventure"
+
+curl "http://localhost:4000/v1/movies?title=moana&genres=animation,adventure"
+
+> Note: The + symbol in the query strings above is URL-encoded space character. Alternatively you could use %20 instead.. either will work in the context of a query string.
+
+
 ### 9.5. Full-Text Search
 
 ### 9.6. Sorting Lists
