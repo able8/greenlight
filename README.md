@@ -400,6 +400,10 @@ curl "http://localhost:4000/v1/movies?page=2&page_size=1"
 
 ### 10.1. Structured JSON Log Entries
 
+mkdir internal/jsonlog
+touch internal/jsonlog/jsonlog.go
+
+
 ### 10.2. Panic Recovery
 
 ## 11. Rate Limiting
