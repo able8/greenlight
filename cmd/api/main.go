@@ -12,6 +12,7 @@ import (
 
 	// Import the pq driver so that it can register itself with the database/sql package.
 	"github.com/able8/greenlight/internal/data"
+	"github.com/able8/greenlight/internal/jsonlog"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
@@ -37,7 +38,9 @@ type config struct {
 // Declare an application struct to hold the dependencies for out HTTP handlers, helpers, and middleware.
 type application struct {
 	config config
-	logger *log.Logger
+	// Change the logger field to have the type *jsonlog.Logger, instead of *log.Logger
+	// logger *log.Logger
+	logger *jsonlog.Logger
 	models data.Models // Add a models struct to hold our new Models struct.
 }
 
@@ -63,37 +66,45 @@ func main() {
 
 	// Initialize a new logger which writes messages to the standard out stream,
 	// prefixed with the current date and time.
-	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+	// logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)
+
+	// Initialize a new jsonlog.Logger which writes any messages at or above
+	// the INFO severity level to the standard out stream.
+	logger := jsonlog.New(os.Stdout, jsonlog.LevelInfo)
 
 	// Call the openDB() helper function to create the connection pool,
 	// passing in the config struct. If this returns an error,
 	// we log it and exit the application immediately.
 	db, err := openDB(cfg)
 	if err != nil {
-		logger.Fatal(err)
+		// 	use the printfatal() method to write a log entry containing the error at the
+		// 	fatal level and exit.  we have no additional properties to include in the log
+		// 	entry, so we pass nil as the second parameter.
+		logger.PrintFatal(err, nil)
+
 	}
 	// Defer a call to db.Close() so that the connection pool is closed be fore the main() exits.
 	defer db.Close()
 
 	// Also log a message to say that the connection pool has been successfully established.
-	logger.Printf("database connection pool established")
+	logger.PrintInfo("database connection pool established", nil)
 
 	migrationDriver, err := postgres.WithInstance(db, &postgres.Config{})
 	if err != nil {
-		logger.Fatal(err, nil)
+		logger.PrintFatal(err, nil)
 	}
 
 	migrator, err := migrate.NewWithDatabaseInstance("file:migrations/", "postgres", migrationDriver)
 	if err != nil {
-		logger.Fatal(err, nil)
+		logger.PrintFatal(err, nil)
 	}
 
 	err = migrator.Up()
 	if err != nil && err != migrate.ErrNoChange {
-		logger.Fatal(err, nil)
+		logger.PrintFatal(err, nil)
 	}
 
-	logger.Printf("database migrations applied")
+	logger.PrintInfo("database migrations applied", nil)
 
 	// Declare an instance of the application struct,
 	// containing the config struct and the logger.
@@ -112,20 +123,30 @@ func main() {
 
 	// Declare a HTTP server with some sensible timeout settings.
 	srv := &http.Server{
-		Addr:         fmt.Sprintf(":%d", cfg.port),
-		Handler:      app.routes(),
+		Addr:    fmt.Sprintf(":%d", cfg.port),
+		Handler: app.routes(),
+		// Create a new Go log.Logger instance, passing in
+		// our custom Logger as the first parameter. The "" and 0 indicate
+		// that the log.Logger instance should not use a prefix or any flags.
+		ErrorLog:     log.New(logger, "", 0),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
 	}
 
 	// Start the HTTP server.
-	logger.Printf("Starting %s server on %s", cfg.env, srv.Addr)
+	// logger.Printf("Starting %s server on %s", cfg.env, srv.Addr)
+
+	logger.PrintInfo("Starting %s server on %s", map[string]string{
+		"addr": srv.Addr,
+		"env":  cfg.env,
+	})
 
 	// Because the err variable is now already declared in the code above,
 	// we need to use the = operator here, instead of the := operator.
 	err = srv.ListenAndServe()
-	logger.Fatal(err)
+	// logger.Fatal(err)
+	logger.PrintFatal(err, nil)
 }
 
 // The openDB() function returns a sql.DB connection pool.

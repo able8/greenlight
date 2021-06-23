@@ -400,9 +400,17 @@ curl "http://localhost:4000/v1/movies?page=2&page_size=1"
 
 ### 10.1. Structured JSON Log Entries
 
+```sh
 mkdir internal/jsonlog
 touch internal/jsonlog/jsonlog.go
 
+greenlight git:(main) ✗ go run ./cmd/api
+
+{"level":"INFO","time":"2021-06-23T15:06:37Z","message":"database connection pool established"}
+{"level":"INFO","time":"2021-06-23T15:06:37Z","message":"database migrations applied"}
+{"level":"INFO","time":"2021-06-23T15:06:37Z","message":"Starting %s server on %s","properties":{"addr":":4000","env":"development"}}
+{"level":"FATAL","time":"2021-06-23T15:06:37Z","message":"listen tcp :4000: bind: address already in use"}
+```
 
 ### 10.2. Panic Recovery
 

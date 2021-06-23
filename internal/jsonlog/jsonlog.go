@@ -1,4 +1,4 @@
-package json
+package jsonlog
 
 import (
 	"encoding/json"
@@ -59,12 +59,12 @@ func (l *Logger) PrintInfo(message string, properties map[string]string) {
 	l.print(LevelInfo, message, properties)
 }
 
-func (l *Logger) PrintError(message string, properties map[string]string) {
-	l.print(LevelError, message, properties)
+func (l *Logger) PrintError(err error, properties map[string]string) {
+	l.print(LevelError, err.Error(), properties)
 }
 
-func (l *Logger) PrintFatal(message string, properties map[string]string) {
-	l.print(LevelFatal, message, properties)
+func (l *Logger) PrintFatal(err error, properties map[string]string) {
+	l.print(LevelFatal, err.Error(), properties)
 	// For entries at the FATAL level, we also terminate the application.
 	os.Exit(1)
 }
