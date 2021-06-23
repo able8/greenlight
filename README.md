@@ -358,6 +358,15 @@ curl "http://localhost:4000/v1/movies?sort=-year"
 
 ### 9.7. Paginating Lists
 
+
+// Return the 5 records on page 1 (records 1-5 in the dataset)
+curl "http://localhost:4000/v1/movies?page=1&page_size=5"
+
+// Return the next 5 records on page 2 (records 6-10 in the dataset)
+curl "http://localhost:4000/v1/movies?page=2&page_size=5"
+
+Behind the scenes, the simplest way to support this style of pagination is by addingLIMIT and OFFSET clauses to our SQL query.
+
 ### 9.8. Returning Pagination Metadata
 
 ## 10. Structured Logging and Error Handling
