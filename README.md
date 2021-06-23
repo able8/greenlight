@@ -350,6 +350,12 @@ DROP INDEX IF EXISS movies_genres_idx;
 
 ### 9.6. Sorting Lists
 
+// Sort the movies on the title field in ascending alphabetical order.
+curl "http://localhost:4000/v1/movies?sort=title"
+
+// Sort the movies on the year field in descending numerical order.
+curl "http://localhost:4000/v1/movies?sort=-year"
+
 ### 9.7. Paginating Lists
 
 ### 9.8. Returning Pagination Metadata
