@@ -330,6 +330,24 @@ curl "http://localhost:4000/v1/movies?title=moana&genres=animation,adventure"
 
 ### 9.5. Full-Text Search
 
+// Return all movies where the title includes the case-insensitive word 'panther'
+/v1/movies?title=panther
+
+curl "http://localhost:4000/v1/movies?title=panther"
+curl "http://localhost:4000/v1/movies?title=the+club"
+
+- Adding indexes
+
+```sh
+migrate create -seq -ext .sql -dir ./migrations add_movies_indexes
+
+CREATE INDEX IF NOT EXISTS movies_title_idx ON movies USING GIN (to_tsvector('simple', title));
+CREATE INDEX IF NOT EXISTS movies_genres_idx ON movies USING GIN (genres);
+
+DROP INDEX IF EXISS movies_title_idx;
+DROP INDEX IF EXISS movies_genres_idx;
+```
+
 ### 9.6. Sorting Lists
 
 ### 9.7. Paginating Lists

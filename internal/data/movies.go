@@ -4,7 +4,6 @@ import (
 	"context"
 	"database/sql"
 	"errors"
-	"fmt"
 	"time"
 
 	"github.com/able8/greenlight/internal/validator"
@@ -216,7 +215,7 @@ func (m MovieModel) GetAll(title string, genres []string, filters Filters) ([]*M
 	query := `
 		SELECT id, created_at, title, year, runtime, genres, version
 		FROM movies
-		WHERE (LOWER(title) = LOWER($1) OR $1 = '')
+		WHERE (to_tsvector('simple', title) @@ plainto_tsquery('simple', $1) OR $1 = '')
 		AND (genres @> $2 OR $2 = '{}')
 		ORDER BY id
 	`
@@ -253,7 +252,7 @@ func (m MovieModel) GetAll(title string, genres []string, filters Filters) ([]*M
 			return nil, err
 		}
 
-		fmt.Printf("%+v\n", movie)
+		// fmt.Printf("%+v\n", movie)
 		// Add the Movie struct to the slice.
 		movies = append(movies, &movie)
 	}
