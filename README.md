@@ -414,6 +414,10 @@ greenlight git:(main) ✗ go run ./cmd/api
 
 ### 10.2. Panic Recovery
 
+```sh
+touch cmd/api/middleware.go
+```
+
 ## 11. Rate Limiting
 
 ### 11.1. Global Rate Limiting
