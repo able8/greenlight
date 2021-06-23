@@ -414,13 +414,22 @@ greenlight git:(main) ✗ go run ./cmd/api
 
 ### 10.2. Panic Recovery
 
-```sh
-touch cmd/api/middleware.go
-```
-
 ## 11. Rate Limiting
 
 ### 11.1. Global Rate Limiting
+
+```sh
+go get golang.org/x/time/rate@latest
+touch cmd/api/middleware.go
+
+for i in {1..6}; do 
+curl "http://localhost:4000/v1/healthcheck"
+done
+
+{
+    "error": "rate limit exceeded"
+}
+```
 
 ### 11.2. IP-based Rate Limiting
 
