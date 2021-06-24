@@ -459,6 +459,12 @@ This will cause the application to exit with a stack dump, similar to this.
 
 ### 12.2. Intercepting Shutdown Signals
 
+```
+pkill -SIGKILL api
+pkill -SIGTERM api
+pkill -SIGINT api
+```
+
 ### 12.3. Executing the Shutdown
 
 ## 13. User Model Setup and Registration
