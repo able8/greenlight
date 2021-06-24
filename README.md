@@ -445,6 +445,18 @@ go run ./cmd/api --limiter-enable=false
 
 ### 12.1. Sending Shutdown Signals
 
+```
+pgrep -l api
+
+pkill -SIGKILL api
+pkill -SIGTERM api
+```
+you can also try sending a SIGQUIT signal - either by pressing Ctrl+\ on your keyboard or
+running `pkill -SIGQUIT api`.
+
+This will cause the application to exit with a stack dump, similar to this.
+
+
 ### 12.2. Intercepting Shutdown Signals
 
 ### 12.3. Executing the Shutdown
