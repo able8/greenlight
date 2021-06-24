@@ -471,7 +471,7 @@ Specifically, after receiving one of these signals we will call the Shutdown() m
 
 > Shutdown gracefully shuts down the server without interrupting any active connections. Shutdown works by first closing all open listeners, then closing allidle connections, and then waiting indefinitely for connections to return to idle and then shut down.
 
-```
+```sh
 ➜  greenlight git:(main) ✗ curl -i localhost:4000/v1/healthcheck & pkill -SIGTERM api
 [1] 88864
 ➜  greenlight git:(main) ✗ HTTP/1.1 200 OK
@@ -502,9 +502,48 @@ In the upcoming sections of this book, we’re going to shift our focus towards 
 
 ### 13.1. Setting up the Users Database Table
 
-```
+```sh
 migrate create -seq -ext=.sql -dir=./migrations create_users_table
+
+CREATE TABLE IF NOT EXISTS users (
+        id bigserial PRIMARY KEY,
+        created_at timestamp(0) with time zone NOT NULL DEFAULT NOW(),
+        name text NOT NULL,
+        email citext UNIQUE NOT NULL,
+        password_hash bytea NOT NULL,
+        activated bool NOT NULL,
+        version integer NOT NULL DEFAULT 1
+);
+
+DROP TABLE IF EXISTS users;
 ```
+
+The email column has the type citext (case-insensitive text). This type stores text dataexactly as it is inputted — without changing the case in any way — but comparisonsagainst the data are always case-insensitive… including lookups on associated indexes.
+
+The password_hash column has the type bytea (binary string). In this column we’ll storea one-way hash of the user’s password generated using bcrypt — not the plaintextpassword itself.
+
+```
+Postgresql: ERROR: type “citext” does not exist
+
+psql postgres
+
+postgres=# \c greenlight
+You are now connected to database "greenlight" as user "able".
+greenlight=# create extension citext;
+CREATE EXTENSION
+greenlight=> \d users
+```
+
+The extension needs to be created in each database. If you want to automatically have an extension created, you can create it in the template1 database which (by default, at least) is the database used as a model for "create database", so with appropriate permissions, in psql:
+
+```
+\c template1
+create extension citext;
+```
+
+Then new databases will include citext by default.
+
+
 ### 13.2. Setting up the Users Model
 
 ### 13.3. Registering a User
