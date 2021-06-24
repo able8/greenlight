@@ -546,6 +546,9 @@ Then new databases will include citext by default.
 
 ### 13.2. Setting up the Users Model
 
+```
+go get golang.org/x/crypto/bcrypt@latest
+```
 ### 13.3. Registering a User
 
 ## 14. Sending Emails
