@@ -467,10 +467,44 @@ pkill -SIGINT api
 
 ### 12.3. Executing the Shutdown
 
+Specifically, after receiving one of these signals we will call the Shutdown() method onour HTTP server. The official documentation describes this as follows:
+
+> Shutdown gracefully shuts down the server without interrupting any active connections. Shutdown works by first closing all open listeners, then closing allidle connections, and then waiting indefinitely for connections to return to idle and then shut down.
+
+```
+➜  greenlight git:(main) ✗ curl -i localhost:4000/v1/healthcheck & pkill -SIGTERM api
+[1] 88864
+➜  greenlight git:(main) ✗ HTTP/1.1 200 OK
+Content-Type: application/json
+Date: Thu, 24 Jun 2021 13:32:19 GMT
+Content-Length: 102
+Connection: close
+
+{
+        "status": "available",
+        "system_info": {
+                "environment": "development",
+                "version": "1.0.0"
+        }
+}
+
+[1]  + 88864 done       curl -i localhost:4000/v1/healthcheck
+
+
+{"level":"INFO","time":"2021-06-24T13:33:39Z","message":"Starting server","properties":{"addr":":4000","env":"development"}}
+{"level":"INFO","time":"2021-06-24T13:33:41Z","message":"caught signal, shutting down server","properties":{"signal":"terminated"}}
+{"level":"INFO","time":"2021-06-24T13:33:45Z","message":"stopped server","properties":{"addr":":4000"}}
+```
+
 ## 13. User Model Setup and Registration
+
+In the upcoming sections of this book, we’re going to shift our focus towards users:registering them, activating them, authenticating them, and restricting access to our APIendpoints depending on the permissions that they have.
 
 ### 13.1. Setting up the Users Database Table
 
+```
+migrate create -seq -ext=.sql -dir=./migrations create_users_table
+```
 ### 13.2. Setting up the Users Model
 
 ### 13.3. Registering a User
