@@ -572,8 +572,12 @@ curl -i -d "$BODY" localhost:4000/v1/users
 
 Mailtrap is a test mail server solution that allows testing email notifications without sending them to the real users of your application. Not only does Mailtrap work as a powerful email test tool, it also lets you view your dummy emails online, forward them to your regular mailbox, share with the team and more! Mailtrap is a mail server test tool built by Railsware Products, Inc., a premium software development consulting company.
 
-
 ### 14.2. Creating Email Templates
+
+```
+mkdir -p internal/mailer/templates
+touch internal/mailer/templates/user_welcome.tmpl.html
+```
 
 ### 14.3. Sending a Welcome Email
 
