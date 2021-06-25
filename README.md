@@ -664,7 +664,12 @@ CREATE TABLE IF NOT EXISTS tokens (
 
 DROP TABLE IF EXISTS tokens;
 ```
+
 ### 15.2. Creating Secure Activation Tokens
+
+```
+code internal/data/tokens.go
+```
 
 ### 15.3. Sending Activation Tokens
 
