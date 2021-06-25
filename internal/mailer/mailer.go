@@ -71,7 +71,7 @@ func (m Mailer) Send(recipient, templateFile string, data interface{}) error {
 	// AddAlternative() should always be called after SetBody().
 	msg := mail.NewMessage()
 	msg.SetHeader("To", recipient)
-	msg.SetHeader("Frome", m.sender)
+	msg.SetHeader("From", m.sender)
 	msg.SetHeader("Subject", subject.String())
 	msg.SetBody("text/plain", plainBody.String())
 	msg.AddAlternative("text/html", htmlBody.String())

@@ -589,7 +589,12 @@ code internal/mailer/mailer.go
 
 we’re also going to use the new Go 1.16 embedded filesfunctionality, so that the email template files will be built into our binary whenwe create it later. This is really nice because it means we won’t have to deploythese template files separately to our production server.
 
+If you want toinclude these files you should use the * wildcard character in the path, like//go:embed "templates/*"You can specify multiple directories and files in one directive. For example://go:embed "images" "styles/css" "favicon.ico".
 
+```
+BODY='{"name": "Bob 3", "email": "bob3@example.com","password": "password"}'
+curl -i -w '\nTime: %{time_total}\n' -d "$BODY" localhost:4000/v1/users
+```
 ### 14.4. Sending Background Emails
 
 ### 14.5. Graceful Shutdown of Background Tasks
