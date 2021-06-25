@@ -4,7 +4,7 @@ import "regexp"
 
 // Declare a regular expression for sanity checking the format of email addresses.
 var (
-	EmailRX = regexp.MustCompile("^[a-zA-Z0-9]*$")
+	EmailRX = regexp.MustCompile("^[a-zA-Z0-9]*")
 )
 
 // Define a new Validator type which contains a map of validation errors.

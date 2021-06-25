@@ -30,7 +30,7 @@ type User struct {
 	Name      string    `json:"name"`
 	Email     string    `json:"email"`
 	Password  password  `json:"-"`
-	Activated string    `json:"activated"`
+	Activated bool      `json:"activated"`
 	Version   string    `json:"-"`
 }
 

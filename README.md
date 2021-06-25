@@ -551,6 +551,19 @@ go get golang.org/x/crypto/bcrypt@latest
 ```
 ### 13.3. Registering a User
 
+```
+touch cmd/api/users.go
+
+BODY='{"name": "Alice Smith", "email": "alice@example.com","password": "password"}'
+curl -i -d "$BODY" localhost:4000/v1/users
+
+BODY='{"name": "", "email": "aliceexample.com","password": "passw"}'
+curl -i -d "$BODY" localhost:4000/v1/users
+
+BODY='{"name": "Alice Smith", "email": "alice@example.com","password": "password"}'
+curl -i -d "$BODY" localhost:4000/v1/users
+```
+
 ## 14. Sending Emails
 
 ### 14.1. SMTP Server Setup
