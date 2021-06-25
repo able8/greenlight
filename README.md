@@ -603,6 +603,27 @@ It’s important to bear in mind that any panic which happens in this background
 
 So we need to make sure that any panic in this background goroutine is manually recovered, using a similar pattern to the one in our recoverPanic() middleware.
 
+If you need to execute a lot of background tasks in your application, it can get tediousto keep repeating the same panic recovery code — and there’s a risk that you mightforget to include it altogether.To help take care of this, it’s possible to create a simple helper function which wrapsthe panic recovery logic. 
+
+
+```go
+// The background() helper accepts an arbitrary function as a parameter.
+func (app *application) background(fn func()) {
+	// Launch a background goroutine.
+	go func() {
+		// Recover any panic
+		defer func() {
+			if err := recover(); err != nil {
+				app.logger.PrintError(fmt.Errorf("%s", err), nil)
+			}
+		}()
+
+		// Execute the function that we passed as the parameter.
+		fn()
+	}()
+}
+```
+
 ### 14.5. Graceful Shutdown of Background Tasks
 
 ## 15. User Activation

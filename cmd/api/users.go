@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 
 	"github.com/able8/greenlight/internal/data"
@@ -63,30 +62,44 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 	}
 
 	// Launch a goroutine which runs an anonymous function that sends the welcome email.
-	go func() {
+	// go func() {
 
-		// Run a deferred function which uses recover() to catch any panic, and
-		// log an error message instead of terminating the application.
-		defer func() {
-			if err := recover(); err != nil {
-				app.logger.PrintError(fmt.Errorf("%s", err), nil)
-			}
-		}()
+	// 	// Run a deferred function which uses recover() to catch any panic, and
+	// 	// log an error message instead of terminating the application.
+	// 	defer func() {
+	// 		if err := recover(); err != nil {
+	// 			app.logger.PrintError(fmt.Errorf("%s", err), nil)
+	// 		}
+	// 	}()
 
-		// panic("test a panic")
+	// 	// panic("test a panic")
+	// 	err = app.mailer.Send(user.Email, "user_welcome.tmpl.html", user)
+	// 	if err != nil {
+	// 		// app.serverErrorResponse(w, r, err)
+	// 		// Importantly, if there is an error sending the email then we use the
+	// 		// app.logger.PrintError() helper to manage it, instead of the
+	// 		// app.serverErrorResponse() helper like before.
+	// 		app.logger.PrintError(err, nil)
+	// 		return
+	// 	}
+	// 	app.logger.PrintInfo("Send email successfully", map[string]string{
+	// 		"email": user.Email,
+	// 	})
+	// }()
+
+	// Use the background helper to execute an anonymous function that sends the welcome email.
+	app.background(func() {
 		err = app.mailer.Send(user.Email, "user_welcome.tmpl.html", user)
 		if err != nil {
-			// app.serverErrorResponse(w, r, err)
-			// Importantly, if there is an error sending the email then we use the
-			// app.logger.PrintError() helper to manage it, instead of the
-			// app.serverErrorResponse() helper like before.
 			app.logger.PrintError(err, nil)
 			return
 		}
+
 		app.logger.PrintInfo("Send email successfully", map[string]string{
 			"email": user.Email,
 		})
-	}()
+	})
+
 	// // Call the Send() method on our Mailer, passing in the user's email address,
 	// // name of the template file, and the User stuct containing the new user's data.
 	// err = app.mailer.Send(user.Email, "user_welcome.tmpl.html", user)
