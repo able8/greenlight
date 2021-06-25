@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/able8/greenlight/internal/data"
@@ -63,6 +64,16 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 
 	// Launch a goroutine which runs an anonymous function that sends the welcome email.
 	go func() {
+
+		// Run a deferred function which uses recover() to catch any panic, and
+		// log an error message instead of terminating the application.
+		defer func() {
+			if err := recover(); err != nil {
+				app.logger.PrintError(fmt.Errorf("%s", err), nil)
+			}
+		}()
+
+		// panic("test a panic")
 		err = app.mailer.Send(user.Email, "user_welcome.tmpl.html", user)
 		if err != nil {
 			// app.serverErrorResponse(w, r, err)

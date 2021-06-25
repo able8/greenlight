@@ -597,6 +597,12 @@ curl -i -w '\nTime: %{time_total}\n' -d "$BODY" localhost:4000/v1/users
 ```
 ### 14.4. Sending Background Emails
 
+Recovering panics
+
+It’s important to bear in mind that any panic which happens in this backgroundgoroutine will not be automatically recovered by our recoverPanic() middleware orGo’s http.Server, and will cause our whole application to terminate.
+
+So we need to make sure that any panic in this background goroutine is manually recovered, using a similar pattern to the one in our recoverPanic() middleware.
+
 ### 14.5. Graceful Shutdown of Background Tasks
 
 ## 15. User Activation
