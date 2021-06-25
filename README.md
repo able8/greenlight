@@ -581,6 +581,15 @@ touch internal/mailer/templates/user_welcome.tmpl.html
 
 ### 14.3. Sending a Welcome Email
 
+```
+go get github.com/go-mail/mail/v2@v2.3.0
+
+code internal/mailer/mailer.go
+```
+
+we’re also going to use the new Go 1.16 embedded filesfunctionality, so that the email template files will be built into our binary whenwe create it later. This is really nice because it means we won’t have to deploythese template files separately to our production server.
+
+
 ### 14.4. Sending Background Emails
 
 ### 14.5. Graceful Shutdown of Background Tasks
