@@ -626,6 +626,28 @@ func (app *application) background(fn func()) {
 
 ### 14.5. Graceful Shutdown of Background Tasks
 
+When we initiate a graceful shutdown of our application, it won’t wait for any background goroutines that we’ve launched to complete.
+
+Fortunately, we can prevent this by using Go’s sync.WaitGroup functionality tocoordinate the graceful shutdown and our background goroutines.
+
+
+To try this out, go ahead and restart the API and then send a request to thePOST /v1/users endpoint immediately followed by a SIGTERM signal. For example:
+
+```sh
+BODY='{"name": "Bob 10", "email": "bob10@example.com","password": "password"}'
+curl -i -w '\nTime: %{time_total}\n' -d "$BODY" localhost:4000/v1/users & pkill -SIGTERM api &
+```
+
+```json
+{"level":"INFO","time":"2021-06-25T16:22:02Z","message":"Starting server","properties":{"addr":":4000","env":"development"}}
+{"level":"INFO","time":"2021-06-25T16:22:14Z","message":"caught signal, shutting down server","properties":{"signal":"terminated"}}
+{"level":"INFO","time":"2021-06-25T16:22:14Z","message":"completing background tasks","properties":{"addr":":4000"}}
+{"level":"INFO","time":"2021-06-25T16:22:19Z","message":"Send email successfully","properties":{"email":"bob10@example.com"}}
+{"level":"INFO","time":"2021-06-25T16:22:19Z","message":"stopped server","properties":{"addr":":4000"}}
+```
+
+This nicely illustrates how the graceful shutdown process waited for the welcomeemail to be sent (which took about two seconds in my case) before finally terminatingthe application.
+
 ## 15. User Activation
 
 ### 15.1. Setting up the Tokens Database Table
