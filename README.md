@@ -652,6 +652,18 @@ This nicely illustrates how the graceful shutdown process waited for the welcome
 
 ### 15.1. Setting up the Tokens Database Table
 
+```
+migrate create -seq -ext=.sql -dir=./migrations create_tokens_table
+
+CREATE TABLE IF NOT EXISTS tokens (
+        hash bytea PRIMARY KEY,
+        user_id bigint NOT NULL REFERENCES users ON DELETE CASCADE,
+        expiry timestamp(0) with time zone NOT NULL,
+        scope text NOT NULL
+);
+
+DROP TABLE IF EXISTS tokens;
+```
 ### 15.2. Creating Secure Activation Tokens
 
 ### 15.3. Sending Activation Tokens
