@@ -1009,7 +1009,26 @@ echo '.envrc' >> .gitignore
 
 ### 20.3. Quality Controlling Code
 
+Use the `go mod tidy` command to prune any unused dependencies from the go.modand go.sum files, and add any missing dependencies.
+
 ### 20.4. Module Proxies and Vendoring
+
+```
+go env
+go env | grep -i proxy
+GONOPROXY=""
+GOPROXY="https://proxy.golang.org,direct"
+```
+
+But if you don’t want to use the module mirror provided by Google, or you’re behind afirewall that blocks it, there are other alternatives like https://goproxy.io and theMicrosoft-provided https://athens.azurefd.net that you can try instead. Or you caneven host your own module mirror using the open-source Athens and goproxy projects.
+
+But if you don’t want to use the module mirror provided by Google, or you’re behind afirewall that blocks it, there are other alternatives like https://goproxy.io and the Microsoft-provided https://athens.azurefd.net that you can try instead. Or you can even host your own module mirror using the open-source Athens and goproxy projects.
+
+#### Vendoring
+
+proxy.golang.org does not save all modules forever. There are a number ofreasons for this, but one reason is if proxy.golang.org is not able to detect asuitable license. In this case, only a temporarily cached copy of the module willbe made available, and may become unavailable if it is removed from theoriginal source and becomes outdated.
+
+So, for these reasons, it can still be sensible to vendor your project dependenciesusing the go mod vendor command. Vendoring dependencies in this way basicallystores a complete copy of the source code for third-party packages in a vendor folderin your project.
 
 ### 20.5. Building Binaries
 
