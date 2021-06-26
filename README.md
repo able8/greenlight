@@ -673,6 +673,11 @@ code internal/data/tokens.go
 
 ### 15.3. Sending Activation Tokens
 
+```sh
+BODY='{"name": "Bob 11", "email": "bob11@example.com","password": "password"}'
+curl -i -w '\nTime: %{time_total}\n' -d "$BODY" localhost:4000/v1/users 
+```
+
 ### 15.4. Activating a User
 
 ## 16. Authentication
