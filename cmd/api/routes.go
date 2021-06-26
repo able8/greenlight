@@ -22,13 +22,14 @@ func (app *application) routes() http.Handler {
 	// Register the relevant methods, URL patterns and handler functions for our
 	// endpoints using th HandlerFunc() method.
 	router.HandlerFunc(http.MethodGet, "/v1/healthcheck", app.healthcheckHandler)
-	router.HandlerFunc(http.MethodGet, "/v1/movies", app.listMoviesHandler)
-	router.HandlerFunc(http.MethodPost, "/v1/movies", app.createMovieHandler)
-	router.HandlerFunc(http.MethodGet, "/v1/movies/:id", app.showMovieHandler)
+
+	router.HandlerFunc(http.MethodGet, "/v1/movies", app.requireActivatedUser(app.listMoviesHandler))
+	router.HandlerFunc(http.MethodPost, "/v1/movies", app.requireActivatedUser(app.createMovieHandler))
+	router.HandlerFunc(http.MethodGet, "/v1/movies/:id", app.requireActivatedUser(app.showMovieHandler))
 
 	// Require a PATCH request, rather than PUT.
-	router.HandlerFunc(http.MethodPatch, "/v1/movies/:id", app.updateMovieHandler)
-	router.HandlerFunc(http.MethodDelete, "/v1/movies/:id", app.deleteMovieHandler)
+	router.HandlerFunc(http.MethodPatch, "/v1/movies/:id", app.requireActivatedUser(app.updateMovieHandler))
+	router.HandlerFunc(http.MethodDelete, "/v1/movies/:id", app.requireActivatedUser(app.deleteMovieHandler))
 
 	// Add the route for the POST /v1/users endpoint.
 	router.HandlerFunc(http.MethodPost, "/v1/users", app.registerUserHandler)

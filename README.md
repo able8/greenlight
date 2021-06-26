@@ -736,10 +736,25 @@ curl -H "Authorization: Bearer MU2WSVFIUVKUGAUF77F3JOFF3A" localhost:4000/v1/hea
 curl -i -H "Authorization: Bearer xxxx" localhost:4000/v1/healthcheck
 ```
 
-
 ## 17. Permission-based Authorization
 
 ### 17.1. Requiring User Activation
+
+```
+curl -i localhost:4000/v1/movies/1
+
+BODY='{"name": "Bob 15", "email": "bob15@example.com","password": "password"}'
+curl -i -d "$BODY" localhost:4000/v1/users
+
+curl -d '{"email": "bob15@example.com","password": "password"}' localhost:4000/v1/tokens/authentication
+
+curl -i -H "Authorization: Bearer S4A6QP6JUWDLKOIP7TEUUUKQGA" localhost:4000/v1/movies/1
+
+select email from users where activated=true;
+curl -d '{"email": "bob13@example.com","password": "password"}' localhost:4000/v1/tokens/authentication
+
+curl -i -H "Authorization: Bearer VCYXGNS7LYXI3NXXEV6SPLGO5E" localhost:4000/v1/movies/1
+```
 
 ### 17.2. Setting up the Permissions Database Table
 
