@@ -786,6 +786,56 @@ DROP TABLE IF EXISTS permissions;
 
 ### 17.4. Checking Permissions
 
+```
+psql $GREENLIGHT_DB_DSN
+
+# Set the activated field to true
+UPDATE users SET activated = true WHERE email = 'alice@example.com';
+UPDATE users SET activated = true WHERE email = 'bob15@example.com';
+
+# Give all users the "movies:read" permission
+INSERT INTO users_permissions
+SELECT id, (SELECT id FROM permissions WHERE code ='movies:read') FROM users;
+
+# Give bob15@example.com the "movies:write" permission
+INSERT INTO users_permissions
+VALUES(
+        (SELECT id FROM users WHERE email = 'bob15@example.com'),
+        (SELECT id FROM permissions WHERE code = 'movies:write')
+
+);
+
+# List all activated users and their permissions.
+SELECT email, array_agg(permissions.code) as permissions
+FROM permissions
+INNER JOIN users_permissions ON users_permissions.permission_id = permissions.id
+INNER JOIN users ON users_permissions.user_id = users.id
+WHERE users.activated = true
+GROUP BY email;
+
+
+ alice@example.com | {movies:read}
+ bob15@example.com | {movies:read,movies:write}
+
+
+curl -d '{"email": "alice@example.com","password": "password"}' localhost:4000/v1/tokens/authentication
+
+curl -i -H "Authorization: Bearer PZLA6XI2N2VRZNFQIEBPEH353M" localhost:4000/v1/movies/1
+
+curl -X DELETE -H "Authorization: Bearer PZLA6XI2N2VRZNFQIEBPEH353M" localhost:4000/v1/movies/1
+{
+    "error": "your user account does not have the necessary permissions to access this resource"
+}
+
+curl -d '{"email": "bob15@example.com","password": "password"}' localhost:4000/v1/tokens/authentication
+curl -i -H "Authorization: Bearer HTMKB472YTWCGS3BMMP4J5LSQA" localhost:4000/v1/movies/1
+
+curl -X DELETE -H "Authorization: Bearer HTMKB472YTWCGS3BMMP4J5LSQA" localhost:4000/v1/movies/1
+{
+        "message": "movie successfully deleted"
+}
+```
+
 ### 17.5. Granting Permissions
 
 ## 18. Cross Origin Requests
