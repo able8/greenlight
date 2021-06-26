@@ -1030,6 +1030,9 @@ proxy.golang.org does not save all modules forever. There are a number ofreasons
 
 So, for these reasons, it can still be sensible to vendor your project dependenciesusing the go mod vendor command. Vendoring dependencies in this way basicallystores a complete copy of the source code for third-party packages in a vendor folderin your project.
 
+
+make vendor
+
 ### 20.5. Building Binaries
 
 ### 20.6. Managing and Automating Version Numbers

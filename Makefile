@@ -28,3 +28,12 @@ db/psql:
 db/migrations/new:
 	echo "Creating migration files for ${name}..."
 	migrate create -seq -ext=.sql -dir=./migrations ${name}
+
+## vendor: tidy and vendor dependencies
+.PHONY: vendor
+vendor:
+	@echo "Tidying and verifying module dependencies..."
+	go mod tidy
+	go mod verify
+	@echo "Vendoring dependencies..."
+	go mod vendor
