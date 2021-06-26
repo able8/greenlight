@@ -958,7 +958,42 @@ go get github.com/felixge/httpsnoop@v1.0.1
 
 ## 20. Building, Versioning and Quality Control
 
+We’re going shift our focus from writing code to managing and maintaining our project, and take steps to help automate common tasks and prepare our API for deployment.
+
 ### 20.1. Creating and Using Makefiles
+
+A phony target is one that is not really the name of a file; rather it is just aname for a rule to be executed.
+
+```Makefile
+## help: print this help message
+help:
+	@echo "Usage:"
+	@sed -n 's/^##//p' ${MAKEFILE_LIST} | column -t -s ":" | sed -e 's/^/  /'
+
+.PHONY: confirm
+confirm:
+	@echo "Are you sure? [y/N]" && read ans && [ $${ans:-N} = y ]
+
+## run/api: run the cmd/api application
+.PHONY: run/api
+# run/api: confirm
+run/api: 
+	go run ./cmd/api
+
+## db/psql: connect to the database using psql
+.PHONY: db/psql
+db/psql:
+	# suppress commands from being echoed by prefixing them with the @ character.
+	@psql ${GREENLIGHT_DB_DSN}
+
+## db/migrations/new name=$1: create a new database migration
+.PHONY: db/migrations/new
+db/migrations/new:
+	echo "Creating migration files for ${name}..."
+	migrate create -seq -ext=.sql -dir=./migrations ${name}
+```
+
+make db/migrations/new name=test
 
 ### 20.2. Managing Environment Variables
 
