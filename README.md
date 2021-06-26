@@ -813,10 +813,8 @@ INNER JOIN users ON users_permissions.user_id = users.id
 WHERE users.activated = true
 GROUP BY email;
 
-
- alice@example.com | {movies:read}
- bob15@example.com | {movies:read,movies:write}
-
+alice@example.com | {movies:read}
+bob15@example.com | {movies:read,movies:write}
 
 curl -d '{"email": "alice@example.com","password": "password"}' localhost:4000/v1/tokens/authentication
 
@@ -837,6 +835,16 @@ curl -X DELETE -H "Authorization: Bearer HTMKB472YTWCGS3BMMP4J5LSQA" localhost:4
 ```
 
 ### 17.5. Granting Permissions
+
+```
+BODY='{"name": "Bob 17", "email": "bob17@example.com","password": "password"}'
+curl -i -d "$BODY" localhost:4000/v1/users
+
+SELECT email, code FROM users
+INNER JOIN users_permissions ON users.id = users_permissions.user_id
+INNER JOIN permissions ON users_permissions.permission_id = permissions.id
+WHERE users.email = 'bob17@example.com';
+```
 
 ## 18. Cross Origin Requests
 

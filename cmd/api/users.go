@@ -62,6 +62,12 @@ func (app *application) registerUserHandler(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
+	// Add the "movie:read" permission for the new user.
+	err = app.models.Permissions.AddForUser(user.ID, "movies:read")
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
 	// Launch a goroutine which runs an anonymous function that sends the welcome email.
 	// go func() {
 
