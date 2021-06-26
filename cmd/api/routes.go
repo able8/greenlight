@@ -32,6 +32,10 @@ func (app *application) routes() http.Handler {
 
 	// Add the route for the POST /v1/users endpoint.
 	router.HandlerFunc(http.MethodPost, "/v1/users", app.registerUserHandler)
+
+	// Add the route for the PUT /v1/users/activated endpoint.
+	router.HandlerFunc(http.MethodPut, "/v1/users/activated", app.activateUserHandler)
+
 	// Return the httprouter instance
 
 	// Wrap the router with the panic recovery middleware

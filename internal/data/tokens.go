@@ -20,7 +20,7 @@ const (
 // Define a Token struct to hold the data for an individual token. This includes the
 // plaintext and hashed version of the token, associated user ID, expiry time and scope.
 type Token struct {
-	PlainText string
+	Plaintext string
 	Hash      []byte
 	UserID    int64
 	Expiry    time.Time
@@ -48,19 +48,19 @@ func generateToken(UserID int64, ttl time.Duration, scope string) (*Token, error
 		return nil, err
 	}
 
-	// Encode the byte slice to a base32 encoded string and assign it to the token PlainText field.
+	// Encode the byte slice to a base32 encoded string and assign it to the token Plaintext field.
 	// This will be the token string that we send to the user in their welcome email.
 	// They will look similar to this: Y3MMG
 	// Note that by default base32 strings may be padded at the end with = character.
 	// We don't need this padding character for the purpose of our token, so
 	// we use the WithPadding(base32.NoPadding) method in the line below to omit them.
-	token.PlainText = base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(randomBytes)
+	token.Plaintext = base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(randomBytes)
 
 	// Generate a SHA-256 hash of the plaintext token string. This will be the value
 	// that we store in the hash field of our database table. Note that the
 	// sha256.Sum256() function returns an array of length 32, so to make it easier to
 	// work with we convert it to a slice using the [:] operator befor storing it.
-	hash := sha256.Sum256([]byte(token.PlainText))
+	hash := sha256.Sum256([]byte(token.Plaintext))
 	token.Hash = hash[:]
 
 	return token, nil

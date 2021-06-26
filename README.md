@@ -680,6 +680,16 @@ curl -i -w '\nTime: %{time_total}\n' -d "$BODY" localhost:4000/v1/users
 
 ### 15.4. Activating a User
 
+```
+curl -X PUT -d '{"token": "invalid"}' localhost:4000/v1/users/activated
+
+
+curl -X PUT -d '{"token": "MO7H725URI5OIDXRJERAB6HAKA"}' localhost:4000/v1/users/activated
+
+psql $GREENLIGHT_DB_DSN
+select email, activated, version FROM users;
+
+```
 ## 16. Authentication
 
 ### 16.1. Authentication Options
