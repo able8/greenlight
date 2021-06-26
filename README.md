@@ -887,6 +887,14 @@ Let’s now make some changes to our API which relax the same-origin policy, so 
 
 The Access-Control-Allow-Origin response header is used to indicate to a browser that it’s OK to share a response with a different origin. In this case, the header value isthe wildcard * character, which means that it’s OK to share the response with anyother origin.
 
+```
+go run ./cmd/api -cors-trusted-origins="http://localhost:9000 http://localhost:9001"
+
+go run ./cmd/examples/cors/simple --addr=":9001"
+go run ./cmd/examples/cors/simple --addr=":9002"
+```
+
+In order to process this command-line flag, we can combine the new Go 1.16 flags.Func() and strings.Fields() functions to split the origin values into a[]string slice ready for use.
 
 
 ### 18.4. Preflight CORS Requests
