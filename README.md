@@ -722,6 +722,15 @@ curl -i -d "$BODY" localhost:4000/v1/tokens/authentication
 
 ### 16.3. Authenticating Requests
 
+Now that our clients have a way to exchange their credentials for anauthentication token, let’s look at how we can use that token to authenticatethem, so we know exactly which user a request is coming from.
+
+Essentially, once a client has an authentication token we will expect them toinclude it with all subsequent requests in an Authorization header, like so:
+
+```
+Authorization: Bearer IEYZSSSSSSSSSSSSSSSSSS
+```
+
+
 ## 17. Permission-based Authorization
 
 ### 17.1. Requiring User Activation

@@ -16,6 +16,9 @@ var (
 	ErrDuplicateEmail = errors.New("duplicate email")
 )
 
+// Declare a new AnonymousUser variable.
+var AnonymousUser = &User{}
+
 // Create a UserModel struct which wraps the connection pool.
 type UserModel struct {
 	DB *sql.DB
@@ -261,4 +264,9 @@ func (m UserModel) GetForToken(tokenScope, tokenPlaintext string) (*User, error)
 
 	// Return the matching user.
 	return &user, nil
+}
+
+// Check if a User instance is the AnonymousUser.
+func (u *User) IsAnonymous() bool {
+	return u == AnonymousUser
 }
