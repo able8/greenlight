@@ -728,6 +728,12 @@ Essentially, once a client has an authentication token we will expect them toinc
 
 ```
 Authorization: Bearer IEYZSSSSSSSSSSSSSSSSSS
+
+curl localhost:4000/v1/healthcheck
+curl -d '{"email": "bob11@example.com","password": "password"}' localhost:4000/v1/tokens/authentication 
+
+curl -H "Authorization: Bearer MU2WSVFIUVKUGAUF77F3JOFF3A" localhost:4000/v1/healthcheck
+curl -i -H "Authorization: Bearer xxxx" localhost:4000/v1/healthcheck
 ```
 
 
