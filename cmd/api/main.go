@@ -6,6 +6,7 @@ import (
 	"expvar"
 	"flag"
 	"os"
+	"runtime"
 	"strings"
 	"sync"
 	"time"
@@ -73,10 +74,6 @@ func main() {
 	// Declare a instance of the config struct.
 	var cfg config
 
-	// Publish a new "version" variable in the expvar handler containing version number.
-	expvar.NewString("version").Set(version)
-
-	// Read the value of the port and env command-line flags into the config struct.
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
 	flag.StringVar(&cfg.env, "env", "development", "Environment (development|staging|production)")
 
@@ -158,6 +155,25 @@ func main() {
 
 	logger.PrintInfo("database migrations applied", nil)
 
+	// Publish a new "version" variable in the expvar handler containing version number.
+	expvar.NewString("version").Set(version)
+
+	// Publish the number of active goroutines.
+	expvar.Publish("goroutines", expvar.Func(func() interface{} {
+		return runtime.NumGoroutine()
+	}))
+
+	// Publish the database connection pool statistics.
+	expvar.Publish("database", expvar.Func(func() interface{} {
+		return db.Stats()
+	}))
+
+	// Publish the current Unix timestamp.
+	expvar.Publish("timestamp", expvar.Func(func() interface{} {
+		return time.Now().Unix()
+	}))
+
+	// Read the value of the port and env command-line flags into the config struct.
 	// Declare an instance of the application struct,
 	// containing the config struct and the logger.
 	app := &application{

@@ -938,6 +938,15 @@ localhost:4000/debug/vars
 
 ### 19.2. Creating Custom Metrics
 
+```
+BODY='{"email": "bob17@example.com","password":"password"}'
+#curl -i -d "$BODY" http://localhost:4000/v1/tokens/authentication
+hey -d "$BODY" -m "POST" http://localhost:4000/v1/tokens/authentication
+
+go run ./cmd/api -cors-trusted-origins="http://localhost:9000 http://localhost:9001" --limiter-enable=false
+
+```
+
 ### 19.3. Request-level Metrics
 
 ### 19.4. Recording HTTP Status Codes
