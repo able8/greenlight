@@ -916,6 +916,17 @@ Cross-Origin Request Blocked: The Same Origin Policy disallows reading theremote
 An Access-Control-Allow-Headers header listing the request headers that can beincluded in real cross-origin requests to the URL.
 
 
+##### Caching preflight responses
+
+If you want, you can also add an Access-Control-Max-Age header to your preflight responses. This indicates the number of seconds that the information provided by the Access-Control-Allow-Methods and Access-Control-Allow-Headers headers can becached by the browser.
+
+
+##### Preflight wildcards
+
+Wildcards in these headers are currently only supported by 74% of browsers. Anybrowsers which don’t support them will block the preflight request.
+
+The Authorization header cannot be wildcarded. Instead, you will need to includethis explicitly in the header like `Access-Control-Allow-Headers: Authorization, *`. Wildcards are not supported for credentialed requests (those with cookies or HTTP basic authentication). For these, the character * will be treated as the literal string"*", rather than as a wildcard.
+
 
 ## 19. Metrics
 
