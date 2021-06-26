@@ -899,6 +899,24 @@ In order to process this command-line flag, we can combine the new Go 1.16 flags
 
 ### 18.4. Preflight CORS Requests
 
+When a cross-origin request doesn’t meet these conditions, then the web browser will trigger an initial ‘preflight’ request before the real request. The purpose of this preflight request is to determine whether the real cross-origin request will be permitted or not.
+
+```
+mkdir -p cmd/examples/cors/preflight
+code cmd/examples/cors/preflight/main.go
+
+go run ./cmd/examples/cors/preflight
+```
+
+已拦截跨源请求：同源策略禁止读取位于 http://localhost:4000/v1/tokens/authentication 的远程资源。（原因：CORS 预检响应的 'Access-Control-Allow-Headers'，不允许使用头 'content-type'）。
+
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading theremote resource at http://localhost:4000/v1/tokens/authentication. (Reason:header ‘content-type’ is not allowed according to header ‘Access-Control-Allow-Headers’ from CORS preflight response).
+
+
+An Access-Control-Allow-Headers header listing the request headers that can beincluded in real cross-origin requests to the URL.
+
+
+
 ## 19. Metrics
 
 ### 19.1. Exposing Metrics with Expvar

@@ -286,6 +286,9 @@ func (app *application) enableCORS(next http.Handler) http.Handler {
 		// Always set a Vary: Origin response header to warn any caches that the response may be different.
 		w.Header().Add("Vary", "Origin")
 
+		// Set a "Vary: Access-Control-Request-Method" header on all responses, as the response will be different depending on whether or not this header exists in the request.
+		w.Header().Add("Vary", "Access-Control-Request-Method")
+
 		// Get the value of the request's origin header.
 		origin := r.Header.Get("Origin")
 
@@ -296,6 +299,19 @@ func (app *application) enableCORS(next http.Handler) http.Handler {
 				if origin == app.config.cors.trustedOrigins[i] {
 					// If there is a match, then set the header.
 					w.Header().Set("Access-Control-Allow-Origin", origin)
+
+					// Check if the request has the HTTP method OPTIONS and contains the header.
+					// If it does, then we treat it as a preflight request.
+					if r.Method == http.MethodOptions && r.Header.Get("Access-Control-Request-Method") != "" {
+						// Set the necessary preflight response headers, as discussed previously.
+						w.Header().Set("Access-Control-Allow-Methods", "OPTIONS, PUT, PATCH, DELETE")
+						w.Header().Set("Access-Control-Allow-Headers", "Authorization, Content-Type")
+
+						// Write the headers along with the a 200 OK and
+						// return from the middleware with no further action.
+						w.WriteHeader(http.StatusOK)
+						return
+					}
 				}
 			}
 		}
