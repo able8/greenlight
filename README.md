@@ -932,6 +932,11 @@ The Authorization header cannot be wildcarded. Instead, you will need to include
 
 ### 19.1. Exposing Metrics with Expvar
 
+The expvar package is a public variable package provided by Golang, which can assist in debugging global variables. 
+
+localhost:4000/debug/vars
+
+
 ### 19.2. Creating Custom Metrics
 
 ### 19.3. Request-level Metrics
