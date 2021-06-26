@@ -1,3 +1,6 @@
+# Include variables from the .envrc file
+include .envrc
+
 ## help: print this help message
 help:
 	@echo "Usage:"
@@ -11,7 +14,8 @@ confirm:
 .PHONY: run/api
 # run/api: confirm
 run/api: 
-	go run ./cmd/api
+	@echo "Staring the application"
+	go run ./cmd/api -db-dsn=${GREENLIGHT_DB_DSN}
 
 ## db/psql: connect to the database using psql
 .PHONY: db/psql

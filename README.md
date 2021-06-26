@@ -997,6 +997,16 @@ make db/migrations/new name=test
 
 ### 20.2. Managing Environment Variables
 
+Using a .envrc file
+
+```
+touch .envrc
+
+export GREENLIGHT_DB_DSN="postgres://greenlight:password@localhost:/greenlight?sslmode=disable"
+
+echo '.envrc' >> .gitignore
+```
+
 ### 20.3. Quality Controlling Code
 
 ### 20.4. Module Proxies and Vendoring
