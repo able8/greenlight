@@ -944,10 +944,11 @@ BODY='{"email": "bob17@example.com","password":"password"}'
 hey -d "$BODY" -m "POST" http://localhost:4000/v1/tokens/authentication
 
 go run ./cmd/api -cors-trusted-origins="http://localhost:9000 http://localhost:9001" --limiter-enable=false
-
 ```
 
 ### 19.3. Request-level Metrics
+
+In this chapter we’re going to create some new middleware to record custom request-level metrics for our application.
 
 ### 19.4. Recording HTTP Status Codes
 
