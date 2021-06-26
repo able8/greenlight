@@ -1030,8 +1030,50 @@ proxy.golang.org does not save all modules forever. There are a number ofreasons
 
 So, for these reasons, it can still be sensible to vendor your project dependenciesusing the go mod vendor command. Vendoring dependencies in this way basicallystores a complete copy of the source code for third-party packages in a vendor folderin your project.
 
+```
+make vendor
+
+➜  greenlight git:(main) ✗ tree -L 3 ./vendor 
+./vendor
+├── github.com
+│   ├── felixge
+│   │   └── httpsnoop
+│   ├── go-mail
+│   │   └── mail
+│   ├── golang-migrate
+│   │   └── migrate
+│   ├── hashicorp
+│   │   ├── errwrap
+│   │   └── go-multierror
+│   ├── julienschmidt
+│   │   └── httprouter
+│   └── lib
+│       └── pq
+├── golang.org
+│   └── x
+│       ├── crypto
+│       └── time
+├── gopkg.in
+│   └── alexcesaro
+│       └── quotedprintable.v3
+└── modules.txt
+
+21 directories, 1 file
+```
+
+Because all the dependency source code is now stored in your project repository itself,it’s easy to check it into Git (or an alternative version control system) alongside the restof your code. This is reassuring because it gives you complete ownership of all the code used to build and run your applications, kept under version control.
+
+#### Vendoring new dependencies
+
+Fortunately, like most other reverse proxies, Caddy adds an X-Forwarded-For headerto each request. This header will contain the real IP address for the client.
+
+```
+go get github.com/tomasen/realip@latest
 
 make vendor
+make run/api 
+```
+
 
 ### 20.5. Building Binaries
 
