@@ -936,7 +936,6 @@ The expvar package is a public variable package provided by Golang, which can as
 
 localhost:4000/debug/vars
 
-
 ### 19.2. Creating Custom Metrics
 
 ### 19.3. Request-level Metrics

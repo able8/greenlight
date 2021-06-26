@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"database/sql"
+	"expvar"
 	"flag"
 	"os"
 	"strings"
@@ -71,6 +72,9 @@ type application struct {
 func main() {
 	// Declare a instance of the config struct.
 	var cfg config
+
+	// Publish a new "version" variable in the expvar handler containing version number.
+	expvar.NewString("version").Set(version)
 
 	// Read the value of the port and env command-line flags into the config struct.
 	flag.IntVar(&cfg.port, "port", 4000, "API server port")
