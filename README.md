@@ -952,6 +952,10 @@ In this chapter we’re going to create some new middleware to record custom req
 
 ### 19.4. Recording HTTP Status Codes
 
+```
+go get github.com/felixge/httpsnoop@v1.0.1
+```
+
 ## 20. Building, Versioning and Quality Control
 
 ### 20.1. Creating and Using Makefiles
