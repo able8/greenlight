@@ -1077,6 +1077,27 @@ make run/api
 
 ### 20.5. Building Binaries
 
+```Makefile
+## build/api: build the cmd/api application
+.PHONY: build/api
+build/api:
+	@echo "Building cmd/api..."
+	go build -o bin/api ./cmd/api
+```
+
+```sh
+make build/api
+
+go tool dist list
+make build/api
+tree ./bin
+
+echo 'bin/' >> .gitignore
+cat .gitignore
+
+go env GOCACHE
+```
+
 ### 20.6. Managing and Automating Version Numbers
 
 ## 21. Deployment and Hosting
