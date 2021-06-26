@@ -846,11 +846,40 @@ INNER JOIN permissions ON users_permissions.permission_id = permissions.id
 WHERE users.email = 'bob17@example.com';
 ```
 
-## 18. Cross Origin Requests
+## 18. Cross Origin Requests (CORS)
+
+We’re going to switch to a completely new topic and update our application so that it supports cross-origin requests (CORS) from JavaScript.
 
 ### 18.1. An Overview of CORS
 
+A webpage on one origin can send data to a different origin. But a webpage on one origin is not allowed to receive data from a different origin.
+
+The same-origin policy prevents a (potentially malicious) website on another origin from reading (possibly confidential) information from your website.
+
+For example, if you have an API at api.example.com and a trusted JavaScript front-end application running on www.example.com, then you’ll probably want to allow cross-origin requests from the trusted www.example.com domain to your API.
+
+Or perhaps you have a completely open public API, and you want to allow cross-originrequests from anywhere so it’s easy for other developers to integrate with their ownwebsites.
+
+
 ### 18.2. Demonstrating the Same-Origin Policy
+
+```
+mkdir -p cmd/examples/cors/simple
+code cmd/examples/cors/simple/main.go
+
+go run ./cmd/examples/cors/simple
+
+localhost:9000
+```
+
+Cross-Origin Request Blocked: The Same Origin Policy disallows reading theremote resource at http://localhost:4000/v1/healthcheck.
+
+The request was sent to our API, which processed the request and returned a successful 200 OK response to the webbrowser containing all our standard response headers. 
+To re-iterate: the request itselfwas not prevented by the same-origin policy — it’s just that the browser won’t let JavaScript see the response.
+
+Finally, it’s important to emphasize that the same-origin policy is a web browser thingonly.
+
+Outside of a web browser, anyone can make a request to our API from anywhere,using curl, wget or any other means and read the response. That’s completely unaffected and unchanged by the same-origin policy.
 
 ### 18.3. Simple CORS Requests
 
