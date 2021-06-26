@@ -883,6 +883,12 @@ Outside of a web browser, anyone can make a request to our API from anywhere,usi
 
 ### 18.3. Simple CORS Requests
 
+Let’s now make some changes to our API which relax the same-origin policy, so that JavaScript can read the responses from our API endpoints. To start with, the simplest way to achieve this is by setting the following header on allour API responses: `Access-Control-Allow-Origin: *`
+
+The Access-Control-Allow-Origin response header is used to indicate to a browser that it’s OK to share a response with a different origin. In this case, the header value isthe wildcard * character, which means that it’s OK to share the response with anyother origin.
+
+
+
 ### 18.4. Preflight CORS Requests
 
 ## 19. Metrics
