@@ -197,7 +197,7 @@ func (app *application) authenticate(next http.Handler) http.Handler {
 	})
 }
 
-// // Check that a user is both authenticated and activated.
+// // Check that a user is both authenticated and actIvated.
 // func (app *application) requireActivatedUser(next http.HandlerFunc) http.HandlerFunc {
 // 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 // 		// Use the contextGetUser() helper that we made earlier to retrieve the user information from the request context.
