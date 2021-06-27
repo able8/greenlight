@@ -1137,6 +1137,53 @@ build/api:
 
 ### 21.2. Server Configuration and Installing Software
 
+```sh
+mkdir -p remote/setup
+code remote/setup/01.sh
+
+# Add the new user (and give them sudo privileges).
+useradd --create-home --shell "/bin/bash" --groups sudo "${USERNAME}"
+
+# Force a password to be set for the new user the first time they log in
+passwd --delete "${USERNAME}"
+chage --lastday 0 "${USERNAME}"
+
+# Copy the SSH keys from the root user to the new User.
+rsync --archive --chown=${USERNAME}:${USERNAME} /root/.ssh /home/${USERNAME}
+
+# Install the migrate CLI tool.
+curl -L https://github.com/golang-migrate/migrate/releases/download/v4.14.1/migrate.linux-amd64.tar.gz | tar xvz
+mv migrate.linux-amd64 /usr/local/bin/migrate
+
+# Install PostgreSQL
+apt --yes install postgresql
+
+# Set up the greenlight DB and create a user account with the password entered earlier.
+sudo -i -u postgresql psql -c "CREATE DATABASE greenlight"
+sudo -i -u postgresql psql -d greenlight -c "CREATE EXTENSION IF NOT EXISTS citext"
+sudo -i -u postgresql psql -d greenlight -c "CREATE ROLE greenlight WITH LOGIN PASSWORD '${DB_PASSWORD}'"
+
+sudo systemctl status caddy
+```
+
+```
+rsync -rP --delete ./remote/setup root@xxx:/root
+```
+
+- `-r` flag indicates that we want to copy the contents of ./remote/setup recursively,
+- `-P` flag indicates that we want to display progress of the transfer
+- `--delete` flag indicates that we want to delete any extraneous files from destination directory
+
+#### Future changes to the server configuration
+
+If you need to make further changes to your droplet configuration or settings, you can create an additional `remote/setup/02.sh` script and then execute it in the following way:
+
+```sh
+rsync -rP --delete ./remote/setup greenlight@xxx:~
+ssh -t greenlight@xxx "sudo bash /home/greenlight/setup/02.sh"
+```
+
+
 ### 21.3. Deployment and Executing Migrations
 
 ### 21.4. Running the API as a Background Service
