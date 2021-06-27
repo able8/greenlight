@@ -26,7 +26,10 @@ const version = "1.0.0"
 // Create a buildTime variable to hold the executable binary build time.
 // Note that this must bu a string type, as the -X linker flag will only work
 // with string variables.
-var buildTime string
+var (
+	buildTime     string
+	commitVersion string
+)
 
 // Declare a config struct to hold all the configuration settings for our application.
 
@@ -122,7 +125,7 @@ func main() {
 
 	// If the version flag value is true, then print out the version number and exit.
 	if *displayVersion {
-		fmt.Printf("Version:\t%s\n", version)
+		fmt.Printf("Version:\t%s-%s\n", version, commitVersion)
 		fmt.Printf("Build time:\t%s\n", buildTime)
 		os.Exit(0)
 	}
