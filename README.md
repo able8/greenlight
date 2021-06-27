@@ -1124,7 +1124,14 @@ build/api:
 	GOOS=linux GOARCH=amd64 go build -ldflags=${linker_flags} -o bin/linux_amd64/api ./cmd/api
 
 ```
+
 ## 21. Deployment and Hosting
+
+- Automate the configuration of the server — including creating user accounts, configuring the firewall and installing necessary software.
+- Automate the process of updating your application and deploying changes to the server.
+- How to run your application as a background service using systemd, as a non-root user.
+- Use Caddy as a reverse proxy in front of your application to automatically manage TLS certificates and handle HTTPS connections.
+
 
 ### 21.1. Creating a Digital Ocean Droplet
 
