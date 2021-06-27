@@ -1220,6 +1220,26 @@ Finally, we need to run `systemctl restart api` to start the service.
 
 ### 21.5. Using Caddy as a Reverse Proxy
 
+The simplest way to configure Caddy is to create a Caddyfile — which containsa series of rules describing what we want Caddy to do.
+
+You can open a SSH tunnel to the droplet and view them usinga web browser on your local machine.
+
+For example, you could open an SSHtunnel between port 4000 on the droplet and port 9999 on your local machine by running the following command (make sure to replace both IP addresseswith your own droplet IP).
+
+Caddy will automatically handle provisioning and renewing TLS certificates foryour domain via Let’s Encrypt, as well as redirecting all HTTP requests toHTTPS. It’s simple to set up, very robust, and saves you the overhead of needing to keep track of certificate renewals manually.
+
+For the final time, deploy this Caddyfile update to your droplet…
+
+```sh
+code remote/production/Caddyfile
+
+make production/configure/caddyfile
+
+ssh -L :9999:xxxx:4000 greenlight@xxxx
+
+curl -i https://greenlight.xx.com
+```
+
 ## 22. Appendices
 
 ### 22.1. Managing Password Resets

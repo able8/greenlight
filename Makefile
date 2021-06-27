@@ -75,4 +75,11 @@ production/configure/api:
 		&& sudo systemctl restart api \
 	'
 
-
+## production/configure/caddyfile: configure the production systemd caddyfile.service file
+.PHONY: production/configure/caddyfile
+production/configure/caddyfile:
+	rsync -P remete/production/Caddyfile greenlight@${production_host_ip}:~
+	ssh -t greenlight@${production_host_ip} '\
+		sudo mv ~/Caddyfile /etc/caddy \
+		&& sudo systemctl reload caddy \
+	'
