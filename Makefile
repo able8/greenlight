@@ -42,7 +42,7 @@ vendor:
 
 ## build/api: build the cmd/api application
 current_time = $(shell date +%Y-%m-%dT%H:%M:%S%z)
-git_description = $(shell git describe --always --dirty)
+git_description = $(shell git describe --always --dirty --tags --long)
 linker_flags = '-s -X main.buildTime=${current_time} -X main.commitVersion=${git_description}'
 
 

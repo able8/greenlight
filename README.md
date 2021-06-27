@@ -1104,6 +1104,13 @@ go env GOCACHE
 make build/api
 
 ./bin/api --version
+
+git tag v1.0.0
+
+git describe --always --dirty --tags --long
+v1.0.0-0-ge5770e8-dirty
+
+
 ```
 
 ## 21. Deployment and Hosting
