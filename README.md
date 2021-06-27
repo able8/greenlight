@@ -1186,6 +1186,13 @@ ssh -t greenlight@xxx "sudo bash /home/greenlight/setup/02.sh"
 
 ### 21.3. Deployment and Executing Migrations
 
+At a very high-level, our deployment process will consist of three actions:
+
+- Copying the application binary and SQL migration files to the droplet.
+- Executing the migrations against the PostgreSQL database on the droplet.
+- Starting the application binary as a background service.
+
+
 ### 21.4. Running the API as a Background Service
 
 ### 21.5. Using Caddy as a Reverse Proxy
