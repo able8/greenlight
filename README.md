@@ -1195,6 +1195,29 @@ At a very high-level, our deployment process will consist of three actions:
 
 ### 21.4. Running the API as a Background Service
 
+In order to run our API application as a background service, the first thing we need to do is make a unit file, which informs systemd how and when to run theservice.
+
+```sh
+mkdir remote/production
+code remete/production/api.service
+
+make production/configure/api
+make production/connect
+ps -U greenlight
+
+sudo ufw delete allow 4000/tcp
+sudo ufw status
+
+# Viewing logs
+sudo journal -u api -n 100 -r
+```
+
+To ‘install’ the file, we need to copy it into the /etc/systemd/system/ folder on our droplet.
+
+Then we need to run the `systemctl enable api` command on our droplet tomake systemd aware of the new unit file and automatically enable the servicewhen the droplet is rebooted.
+
+Finally, we need to run `systemctl restart api` to start the service.
+
 ### 21.5. Using Caddy as a Reverse Proxy
 
 ## 22. Appendices

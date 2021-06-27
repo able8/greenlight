@@ -64,3 +64,15 @@ production/deploy/api:
 	rsync -rP --delete ./bin/linux_amd64/api ./migrations greenlight@${production_host_ip}:~
 	ssh -t greenlight@${production_host_ip} 'migrate -path ~/migrations -database $$GREENLIGHT_DB_DSN up'
 
+
+## production/configure/api: configure the production systemd api.service file
+.PHONY: production/configure/api
+production/configure/api:
+	rsync -P remete/production/api.service greenlight@${production_host_ip}:~
+	ssh -t greenlight@${production_host_ip} '\
+		sudo mv ~/api.service /etc/systemd/system/ \
+		&& sudo systemctl enable api \
+		&& sudo systemctl restart api \
+	'
+
+
