@@ -1100,6 +1100,12 @@ go env GOCACHE
 
 ### 20.6. Managing and Automating Version Numbers
 
+```sh
+make build/api
+
+./bin/api --version
+```
+
 ## 21. Deployment and Hosting
 
 ### 21.1. Creating a Digital Ocean Droplet
