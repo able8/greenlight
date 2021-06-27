@@ -1109,10 +1109,21 @@ git tag v1.0.0
 
 git describe --always --dirty --tags --long
 v1.0.0-0-ge5770e8-dirty
-
-
 ```
 
+```Makefile
+## build/api: build the cmd/api application
+current_time = $(shell date +%Y-%m-%dT%H:%M:%S%z)
+git_description = $(shell git describe --always --dirty --tags --long)
+linker_flags = '-s -X main.buildTime=${current_time} -X main.version=${git_description}'
+
+.PHONY: build/api
+build/api:
+	@echo "Building cmd/api..."
+	go build -ldflags=${linker_flags} -o bin/api ./cmd/api
+	GOOS=linux GOARCH=amd64 go build -ldflags=${linker_flags} -o bin/linux_amd64/api ./cmd/api
+
+```
 ## 21. Deployment and Hosting
 
 ### 21.1. Creating a Digital Ocean Droplet
